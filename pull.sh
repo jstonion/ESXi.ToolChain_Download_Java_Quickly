@@ -64,7 +64,6 @@ function Get_Download_Link {
     -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
     -H "Accept-Language: en-US,en;q=0.5" --compressed \
     -H "Referer: $URL" \
-    -H "Cookie: $COOKIE" \
     -H "DNT: 1" \
     -H "Connection: keep-alive" \
     -H "Upgrade-Insecure-Requests: 1" \
@@ -98,3 +97,18 @@ for FILE_NAME in $LIST_FILE
 do
     Get_Download_Link "jre-redist-1.7.0_17/baseline/"$FILE_NAME
 done
+
+#http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip
+mkdir src/jce_policy-7
+LINK="http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip"
+curl "$LINK" \
+-H "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:51.0) Gecko/20100101 Firefox/51.0" \
+-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
+-H "Accept-Language: en-US,en;q=0.5" --compressed \
+-H "Referer: $URL" \
+-H "DNT: 1" \
+-H "Connection: keep-alive" \
+-H "Upgrade-Insecure-Requests: 1" \
+-b $COOKIE \
+-c $COOKIE \
+-o "src/jce_policy-7/UnlimitedJCEPolicyJDK7.zip" -L
