@@ -5,11 +5,23 @@ if [ ! -d "./src" ]
     echo "It's often /build/toolchain/"
     exit 1
 fi
+#Login information
+echo "Please enter your Oracle account information! You can get 1 free at http://www.oracle.com"
+getUsernameAndPassword() {
+	read -p "Username: " USERNAME
+	read -p "Password: " PASSWORD
+	read -p "User: $USERNAME
+Password: $PASSWORD
+Are you sure? (y/n): " reCheck
+}
+getUsernameAndPassword
+while [ $reCheck != "y" ]
+do
+	getUsernameAndPassword
+done
+
 #Cookie storage
 COOKIE=/tmp/cookie
-#Login information
-USERNAME="xxx@gmail.com"
-PASSWORD="123456__Pass_here"
 
 JAVA_1_4=http://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-javase14-419411.html
 JAVA_1_5=http://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-javase5-419410.html
