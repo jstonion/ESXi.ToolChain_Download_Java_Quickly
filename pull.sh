@@ -1,23 +1,23 @@
 #!/bin/bash
 if [ ! -d "./src" ]
     then
-    echo "This file should place at same place with folder src"
-    echo "It's often /build/toolchain/"
-    exit 1
+    DOWNLOAD_PATH="."
+else
+    DOWNLOAD_PATH="./src"
 fi
 #Login information
 echo "Please enter your Oracle account information! You can get 1 free at http://www.oracle.com"
 getUsernameAndPassword() {
-	read -p "Username: " USERNAME
-	read -p "Password: " PASSWORD
-	read -p "User: $USERNAME
+    read -p "Username: " USERNAME
+    read -p "Password: " PASSWORD
+    read -p "User: $USERNAME
 Password: $PASSWORD
 Are you sure? (y/n): " reCheck
 }
 getUsernameAndPassword
 while [ $reCheck != "y" ]
 do
-	getUsernameAndPassword
+    getUsernameAndPassword
 done
 
 #Cookie storage
@@ -69,7 +69,7 @@ function Get_Download_Link {
     LINK=$(curl $URL -sS | grep -oP 'http[^"]*'$FILE_NAME)
     echo "============================="
     echo "URL: $LINK"
-    echo "Path: src/$FILE_PATH"
+    echo "Path: $DOWNLOAD_PATH/$FILE_PATH"
     echo "Name: $FILE_NAME"
     curl "$LINK" \
     -H "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:51.0) Gecko/20100101 Firefox/51.0" \
@@ -81,10 +81,10 @@ function Get_Download_Link {
     -H "Upgrade-Insecure-Requests: 1" \
     -b $COOKIE \
     -c $COOKIE \
-    -o "src/$FILE_PATH" -L
+    -o "$DOWNLOAD_PATH/$FILE_PATH" -L
     
     #Need to executable, this's missing from VMWare Document
-    chmod 755 src/$FILE_PATH
+    chmod 755 $DOWNLOAD_PATH/$FILE_PATH
 }
 #Login first
 #clear cookie
@@ -93,7 +93,7 @@ Login
 #For JDK
 for path in $(ls src | grep jdk-1.)
 do
-    cat src/$path/install.sh | grep -P '^ *PKG' | while read pkg
+    cat $DOWNLOAD_PATH/$path/install.sh | grep -P '^ *PKG' | while read pkg
     do
         FILE_NAME=$(echo $pkg|cut -d= -f2)
         Get_Download_Link $path/$FILE_NAME
@@ -101,7 +101,7 @@ do
 done
 
 #JRE
-mkdir -p src/jre-redist-1.7.0_17/baseline
+mkdir -p $DOWNLOAD_PATH/jre-redist-1.7.0_17/baseline
 LIST_FILE="jre-7u17-linux-i586.rpm
 jre-7u17-linux-x64.rpm
 jre-7u17-windows-i586.tar.gz
@@ -114,7 +114,7 @@ do
 done
 
 #http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip
-mkdir src/jce_policy-7
+mkdir $DOWNLOAD_PATH/jce_policy-7
 LINK="http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip"
 curl "$LINK" \
 -H "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:51.0) Gecko/20100101 Firefox/51.0" \
@@ -126,4 +126,4 @@ curl "$LINK" \
 -H "Upgrade-Insecure-Requests: 1" \
 -b $COOKIE \
 -c $COOKIE \
--o "src/jce_policy-7/UnlimitedJCEPolicyJDK7.zip" -L
+-o "$DOWNLOAD_PATH/jce_policy-7/UnlimitedJCEPolicyJDK7.zip" -L
