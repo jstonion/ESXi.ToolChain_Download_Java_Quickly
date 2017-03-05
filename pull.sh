@@ -82,6 +82,9 @@ function Get_Download_Link {
     -b $COOKIE \
     -c $COOKIE \
     -o "src/$FILE_PATH" -L
+    
+    #Need to executable, this's missing from VMWare Document
+    chmod 755 src/$FILE_PATH
 }
 #Login first
 #clear cookie
